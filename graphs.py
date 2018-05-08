@@ -38,7 +38,7 @@ def bar(val, labels, xLabel, yLabel, Title):
 	show()
 
 
-def top10(x,y):
+def top10(x):
 	inverted_dict = getDict(x)
 	slices=[]
 	labels=[]
@@ -117,7 +117,7 @@ def getData(column):
 	x = x_array.flatten()
 	return x
 
-def ks(X,Y):
+def permutation(X,Y):
 	X_mean = float(sum(X)/len(Y))
 	Y_mean = float(sum(Y)/len(Y))
 	N = len(X)+len(Y)
@@ -138,49 +138,42 @@ def ks(X,Y):
 				count += 1
 		else:
 			pass
-	print "\nAnswer 7b"
 	print "Number of Ti > T_observed are:",count
 	p_value = Decimal(count)/Decimal(10**6)
 	print "p-value is: ", p_value,"\n"
 
-def juv(x,y,z):
+def initiative(x,y,t,title):
 	tempx = [0,0,0,0,0,0,0,0,0,0,0,0]
 	tempy = [0,0,0,0,0,0,0,0,0,0,0,0]
 	for a in range(len(x)):
-	    if type(x[a]) != float and type(y[a]) != float and 'Juv' in y[a]:
-			# print x[a], x[a][0:2],x[a].index('/'),x[a][0:x.index('/')]
+	    if type(x[a]) != float and type(y[a]) != float and t in y[a]:
 			temp = int(x[a][0:x[a].index('/')])
 			if (x[a][-4:] == '2010' or x[a][-4:] == '2011' or x[a][-4:] == '2012') :
 			    tempy[temp-1] += 1
 			elif (x[a][-4:] == '2013' or x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
 				tempx[temp-1] += 1
-	ks(tempx,tempy)
+	print ("Permutation Test")
+	permutation(tempx,tempy)
 	data = [0,0,0,0,0,0,0,0,0]
 	for a in range(len(x)):
-		if type(x[a]) != float and type(y[a]) != float and 'Juv' in y[a]:
-			print x[a][-1:],x[a]
-			temp = int(x[a][-1:])
-	        data[temp] += 1
-	print data
+		if type(x[a]) != float and type(y[a]) != float and t in y[a]:
+			data[int(x[a][-1:])] += 1	
 	plots=[]
 	a, = plt.plot([2010,2011,2012,2013,2014,2015,2016,2017,2018], data,label = 'Crime Rate')
 	plots.append(a)
 	plt.legend(handles=plots)
-	plt.title('Juvinile Crime Rate Trend')
+	plt.title(title)
 	plt.show()
 
 
 
 
 dataset = pd.read_csv('wo.csv')
+initiative(getData('Date Occurred'), getData('Status Description'), 'Juv', 'Juvinile Crime Rate Trend')
+initiative(getData('Date Occurred'), getData('Crime Code Description'), 'CHILD ABUSE' ,'Child Abuse Crime Rate Trend')
 top10(getData('Crime Code Description'))
 premise(getData('Crime Code Description'), getData('Premise Description'), 'STREET', 'Top 10 Crime Type on Street')
 premise(getData('Crime Code Description'), getData('Premise Description'), 'SINGLE FAMILY', 'Top 10 Crime Type on Single Family Dwelling')
 premise(getData('Crime Code Description'), getData('Premise Description'), 'MULTI-UNIT', 'Top 10 Crime Type on Multi-Unit Dwelling')
 crimeVsVictimDescent(getData('Victim Descent'))
 crimeVsPremiseType(getData('Premise Description'))
-
-
-	
-
-
