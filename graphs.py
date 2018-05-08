@@ -148,9 +148,9 @@ def initiative(x,y,t,title):
 	for a in range(len(x)):
 	    if type(x[a]) != float and type(y[a]) != float and t in y[a]:
 			temp = int(x[a][0:x[a].index('/')])
-			if (x[a][-4:] == '2010' or x[a][-4:] == '2011' or x[a][-4:] == '2012') :
+			if (x[a][-4:] == '2010' or x[a][-4:] == '2011' or x[a][-4:] == '2012' ):
 			    tempy[temp-1] += 1
-			elif (x[a][-4:] == '2013' or x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
+			elif (  x[a][-4:] == '2013' or x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
 				tempx[temp-1] += 1
 	print ("Permutation Test")
 	permutation(tempx,tempy)
@@ -165,12 +165,36 @@ def initiative(x,y,t,title):
 	plt.title(title)
 	plt.show()
 
+def proposition47(x,title):
+	tempx = [0,0,0,0,0,0,0,0,0,0,0,0]
+	tempy = [0,0,0,0,0,0,0,0,0,0,0,0]
+	for a in range(len(x)):
+	    if type(x[a]) != float :
+			temp = int(x[a][0:x[a].index('/')])
+			if (x[a][-4:] == '2010' or x[a][-4:] == '2011' or x[a][-4:] == '2012' or x[a][-4:] == '2013'):
+			    tempy[temp-1] += 1
+			elif ( x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
+				tempx[temp-1] += 1
+	print ("Permutation Test")
+	permutation(tempx,tempy)
+	data = [0,0,0,0,0,0,0,0]
+	for a in range(len(x)):
+		if type(x[a]) != float and int(x[a][-1:]) != 8:
+			data[int(x[a][-1:])] += 1	
+	plots=[]
+	a, = plt.plot([2010,2011,2012,2013,2014,2015,2016,2017], data,label = 'Crime Rate')
+	plots.append(a)
+	plt.legend(handles=plots)
+	plt.title(title)
+	plt.show()
+
 
 
 
 dataset = pd.read_csv('wo.csv')
 initiative(getData('Date Occurred'), getData('Status Description'), 'Juv', 'Juvinile Crime Rate Trend')
-initiative(getData('Date Occurred'), getData('Crime Code Description'), 'CHILD ABUSE' ,'Child Abuse Crime Rate Trend')
+initiative(getData('Date Occurred'), getData('Crime Code Description'), 'CHILD' ,'Child Abuse Crime Rate Trend')
+proposition47(getData('Date Occurred'), 'Crime Rate Trend')
 top10(getData('Crime Code Description'))
 premise(getData('Crime Code Description'), getData('Premise Description'), 'STREET', 'Top 10 Crime Type on Street')
 premise(getData('Crime Code Description'), getData('Premise Description'), 'SINGLE FAMILY', 'Top 10 Crime Type on Single Family Dwelling')
