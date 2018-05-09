@@ -7,13 +7,12 @@ import re
 import random
 import datetime
 
-#URLs of the three CSVs
 properties_url = r'/Users/santwana/Desktop/testing/LACrimeDataAnalysis/Crime_Data_from_2010_to_Present.csv'
 ds = pd.read_csv(str(properties_url), low_memory = False)
 print(ds.head(3))
 
 print("length of ds :",len(ds))
-ds2 = ds[['DR Number','Area Name','Location ']]
+ds2 = ds[["DR Number","Area Name","Location "]]
 print(ds2.head(2))
 
 def get_distance(lat1, long1, lat2, long2):
@@ -66,7 +65,7 @@ def plot_for_area(area_name,popular_area_location):
     pop_lat,pop_long = get_lat_long(popular_area_location)
 #     print(df_area)
 #     print(pop_lat,pop_long)
-    print()
+    # print()
     distance = list()
     loc = df_area['Location ']
     for location in loc:
@@ -77,161 +76,15 @@ def plot_for_area(area_name,popular_area_location):
         if(dist_temp > 40000):
             continue
         distance.append(dist_temp)
-    print("distance")
-    # pl.xlabel(area_name)
-    # pl.ylabel('crime')
-    # pl.hist(distance, bins = 500, facecolor = 'green', alpha = 0.75)
-    # pl.axis([400, 20000, 0, 3000])
-    # pl.grid(True)
-    # print("plot for area finished")
-    # filename = "/Users/santwana/Desktop/testing/Plots1/" + area_name + ".png"
-    # plt.savefig(filename)
-    # plt.show()
+    # print("distance")
     
-    # std_dev1 = np.std(distance, ddof = 0)
-    # print("std_dev1 is:", std_dev1)
-
-    # mean1 = np.mean(distance)
-    # print("mean1 is:", mean1) 
-
-#     kde = gaussian_kde( distance )
-#     # these are the values over wich your kernel will be evaluated
-#     dist_space = linspace( min(distance), max(distance), 100 )
-#     # plot the results
-#     plt.plot( dist_space, kde(dist_space) )
-
-# #     n, bins, patches = pl.hist(distance, 500, normed = 10, facecolor ='green', alpha = 0.75)
-#     filename1 = "/Users/santwana/Desktop/testing/Plots1/PDF/" + area_name + ".png"
-#     plt.savefig(filename1)
-#     plt.show()
-    
-#     sorted_distance = np.sort(distance)
-#     p = 1. * np.arange(len(sorted_distance))/(len(sorted_distance) - 1)
-#     pls.plot(sorted_distance, p)
-#     filename4 = "/Users/santwana/Desktop/testing/Plots1/CDF/" + area_name + ".png"
-#     pl.savefig(filename4)
-#     pls.show()
 
     return distance   
-
-# from scipy.stats import ks_2samp
-# import pylab 
-# def KS_test(area_name,popular_area_location):
-#     df_area = ds2[ds2['Area Name']  == area_name].copy()
-#     pop_lat,pop_long = get_lat_long(popular_area_location)
-# #     print(df_area)
-# #     print(pop_lat,pop_long)
-#     print()
-#     distance = list()
-#     loc = df_area['Location ']
-   
-#     for location in loc:
-#         lat_loc,long_loc = get_lat_long(location)
-#         if(lat_loc is -1):
-#             continue
-#         dist_temp = get_distance(pop_lat,pop_long,lat_loc,long_loc)
-        
-#         if(dist_temp > 40000):
-#             continue
-#         distance.append(dist_temp)
-#     return distance 
-
-# df_Olympic = KS_test("Olympic", "34.044736, -118.264549")
-# df_Hollywood = KS_test("Hollywood", "34.136518, -118.356051")
-# # print("OLYMPIC:",df_Olympic)
-# print("OLYMPIC LENGTH: ", len(df_Olympic))
-# # print("HOLLYWOOD",df_Hollywood)
-# print("HOLLYWOOD LENGTH: ", len(df_Hollywood))
-# print(ks_2samp(df_Olympic, df_Hollywood))
-
-# from matplotlib import pyplot as pls
-# sorted_df_Olympic = np.sort(df_Olympic)
-# sorted_df_Hollywood = np.sort(df_Hollywood) 
-# p1 = 1. * np.arange(len(sorted_df_Olympic))/(len(sorted_df_Olympic) - 1)
-# pls.plot(sorted_df_Olympic, p1, 'g', label='True CDF Olympic')
-# p2 = 1. * np.arange(len(sorted_df_Hollywood))/(len(sorted_df_Hollywood) - 1)
-# pls.plot(sorted_df_Hollywood, p2, 'blue', label='True CDF Hollywood')
-# pls.xlabel("Distance")
-# pls.ylabel("Cumulative Probability")
-
-# pls.title("CDF for Olympic and Hollyoowd")
-# pylab.legend(loc = 'lower right')
-# filenamecdfs = "/Users/santwana/Desktop/testing/Plots1/CDF/ComparingHollywood&Olympic.png"
-# pls.savefig(filenamecdfs)
-# pls.show()
-
-
-
-# from scipy.stats import ks_2samp
-
-# def KS_test(area_name,popular_area_location):
-#     df_area = ds2[ds2['Area Name']  == area_name].copy()
-#     pop_lat,pop_long = get_lat_long(popular_area_location)
-# #     print(df_area)
-# #     print(pop_lat,pop_long)
-#     print()
-#     distance = list()
-#     loc = df_area['Location ']
-   
-#     for location in loc:
-#         lat_loc,long_loc = get_lat_long(location)
-#         if(lat_loc is -1):
-#             continue
-#         dist_temp = get_distance(pop_lat,pop_long,lat_loc,long_loc)
-        
-#         if(dist_temp > 40000):
-#             continue
-#         distance.append(dist_temp)
-#     return distance 
-
-# df_Southeast = KS_test("Southeast", "33.9, -118.166667")
-# df_Wilshire = KS_test("Wilshire", "34.05, -118.2593")
-# # print("Southeast:",df_Southeast)
-# print("Southeast LENGTH: ", len(df_Southeast))
-# # print("HOLLYWOOD",df_Southeast)
-# print("Wilshire LENGTH: ", len(df_Wilshire))
-# print(ks_2samp(df_Southeast, df_Wilshire))
-
-
-
-# import numpy as np
-# from scipy.stats import norm
-# import matplotlib.pyplot as plotOLy
-
-# def get_dist(area_name,popular_area_location):
-#     df_area = ds2[ds2['Area Name']  == area_name].copy()
-#     pop_lat,pop_long = get_lat_long(popular_area_location)
-# #     print(df_area)
-# #     print(pop_lat,pop_long)
-#     print()
-#     distance = list()
-#     loc = df_area['Location ']
-   
-#     for location in loc:
-#         lat_loc,long_loc = get_lat_long(location)
-#         if(lat_loc is -1):
-#             continue
-#         dist_temp = get_distance(pop_lat,pop_long,lat_loc,long_loc)
-        
-#         if(dist_temp > 40000):
-#             continue
-#         distance.append(dist_temp)
-#     return distance 
-
-# dist = get_dist("Olympic", "34.044736, -118.264549")
-
-# std_dev_O = np.std(dist, ddof = 0)
-# print("std_dev_total is:", std_dev_O)
-
-# mean_O = np.mean(dist)
-# print("mean_total is:", mean_O)
-# # Fit a normal distribution to the data:
-# mu, std = norm.fit(dist)
 
 area = ds2["Area Name"]
 # area = str(area)
 loc = ds2["Location "]
-print("length : ", len(loc))
+# print("length : ", len(loc))
 # print("length of ds2 : ",len(ds2))
 # print("area length",len(area))
 #print("loaction is dchjsgchsdbjchsdb",loc)
@@ -252,20 +105,6 @@ print(total[:5])
 
 ds['Distance'] = pd.Series(total)
 ds.to_csv('output.csv', index = True)
-
-# Plot the histogram.
-# plotOLy.hist(total, bins = 300, normed = True, alpha = 0.6, color='g')
-
-# # Plot the PDF.
-# xmin, xmax = plt.xlim()
-# x = np.linspace(xmin, xmax, 200)
-# p = norm.pdf(x, mu, std)
-# plotOLy.plot(x, p, 'k', linewidth = 2)
-# title = "Fit results: mu = %.2f,  std = %.2f" % (mu, std)
-# plotOLy.title(title)
-# filen = "/Users/santwana/Desktop/testing/New/Olympic.png"
-# plotOLy.savefig(filen)
-# plotOLy.show()
 
 import csv
 import io
