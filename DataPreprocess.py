@@ -5,36 +5,22 @@ import seaborn as sns
 import os
 import re
 import random
-import datetime
+import time
 
-properties_url = r'/Users/santwana/Desktop/testing/LACrimeDataAnalysis/Crime_Data_from_2010_to_Present.csv'
-ds = pd.read_csv(str(properties_url), low_memory = False)
-print(ds.head(3))
-
-print("length of ds :",len(ds))
-ds2 = ds[["DR Number","Area Name","Location "]]
-print(ds2.head(2))
 
 def get_distance(lat1, long1, lat2, long2):
-    # approximate radius of earth in km
     R = 6373.0
-#     print(" lat,long : ",lat1, long1, lat2, long2)
     lat1 = np.radians(lat1)
     long1 = np.radians(long1)
     lat2 = np.radians(lat2)
     long2 = np.radians(long2)
-
     dlong = long2 - long1
     dlat = lat2 - lat1
-
     a = np.sin(dlat / 2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlong / 2)**2
-    
     c = 2 * np.arcsin(np.sqrt(a))
     km = 6367 * c
     meters = km * 1000
     return meters
-    #meters = str(meters).split('.')[0]
-    #return int(meters)
 
 
 def get_lat_long(location):
@@ -48,24 +34,9 @@ def get_lat_long(location):
     long1 = float(long1)
     return lat1,long1
 
-from scipy.interpolate import UnivariateSpline
-#from matplotlib import pyplot as plt
-import matplotlib.pyplot as pl
-import matplotlib.pyplot as plt
-from matplotlib import pyplot as pls
-from numpy import linspace
-from scipy.stats.kde import gaussian_kde
-import numpy as np
-from scipy.stats import norm
-import matplotlib.pyplot as plt9
-
 def plot_for_area(area_name,popular_area_location):
-    # print("In plot for area")
     df_area = ds2[ds2['Area Name']  == area_name].copy()
     pop_lat,pop_long = get_lat_long(popular_area_location)
-#     print(df_area)
-#     print(pop_lat,pop_long)
-    # print()
     distance = list()
     loc = df_area['Location ']
     for location in loc:
@@ -76,131 +47,69 @@ def plot_for_area(area_name,popular_area_location):
         if(dist_temp > 40000):
             continue
         distance.append(dist_temp)
-    # print("distance")
-    
-
     return distance   
 
-area = ds2["Area Name"]
-# area = str(area)
-loc = ds2["Location "]
-# print("length : ", len(loc))
-# print("length of ds2 : ",len(ds2))
-# print("area length",len(area))
-#print("loaction is dchjsgchsdbjchsdb",loc)
-# print(ds2["Area Name"])
+def getData(column):
+    x = ds[[column]]
+    x_array = x.values
+    x = x_array.flatten()
+    return x
 
-Data = [["77th Street","33.938739, -118.241047"],["Olympic","34.044736, -118.264549"],["Central","34.1, -118.333333"],["Southeast","33.9, -118.166667"],["Topanga","34.045053, -118.563824"],["Northeast","34.11194, -118.19806"],["Foothill","34.140635, -118.044354"],["Mission","34.22472, -118.44889"],["Van Nuys","34.20114, -118.50113"],["Newton","34.037168, -118.256404"],["Hollywood","34.136518, -118.356051"],["Rampart","34.0792, -118.258"],["N Hollywood","34.1919 , -118.4011"],["West Valley","34.179084, -118.413782"],["Pacific","34.042738, -118.55235"],["Devonshire","34.2582, -118.5392"],["Harbor","33.729186, -118.262015"],["Hollenbeck","34.039956, -118.21804"],["West LA","34.0380, -118.4532"],["Wilshire","34.05, -118.2593"]]
+def victimDescent():
+    temp = []
+    x = getData('Victim Descent')
+    dictionary = {'X': 'Unknown',  'B': 'African American', 'W':'Caucasian', 'H':'Hispanic/Latin/Mexican'}
+    for a in x:
+        if a in dictionary.keys():
+            temp.append(dictionary[a])
+        else:
+            temp.append('Other')
+    return temp
 
-print("starting process")
-total = list()
-for data in Data:
-    # print("data : ", data)
-    distance = plot_for_area(data[0],data[1])
-    total = total + distance
-    # print(data[0],"finished")
+def distance():
+    area = ds2["Area Name"]
+    loc = ds2["Location "]
+    Data = [["77th Street","33.938739, -118.241047"],["Olympic","34.044736, -118.264549"],["Central","34.1, -118.333333"],["Southeast","33.9, -118.166667"],["Topanga","34.045053, -118.563824"],["Northeast","34.11194, -118.19806"],["Foothill","34.140635, -118.044354"],["Mission","34.22472, -118.44889"],["Van Nuys","34.20114, -118.50113"],["Newton","34.037168, -118.256404"],["Hollywood","34.136518, -118.356051"],["Rampart","34.0792, -118.258"],["N Hollywood","34.1919 , -118.4011"],["West Valley","34.179084, -118.413782"],["Pacific","34.042738, -118.55235"],["Devonshire","34.2582, -118.5392"],["Harbor","33.729186, -118.262015"],["Hollenbeck","34.039956, -118.21804"],["West LA","34.0380, -118.4532"],["Wilshire","34.05, -118.2593"]]
+    total = list()
+    for data in Data:
+        distance = plot_for_area(data[0],data[1])
+        total = total + distance
+    return total
 
-print(total[:5])
-# csv_input = pd.read_csv('Crime_Data.csv')
+def crimeType():
+    temp = []
+    x = getData('Crime Code Description')
+    violent = ['INTIMATE PARTNER - SIMPLE ASSAULT', 'VANDALISM - MISDEAMEANOR ($399 OR UNDER)', 'CRIMINAL HOMICIDE', 'BATTERY - SIMPLE ASSAULT', 'ROBBERY', 'SODOMY/SEXUAL CONTACT B/W PENIS OF ONE PERS TO ANUS OTH 0007=02', 'ATTEMPTED ROBBERY', 'RESISTING ARREST', 'ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT', 'THROWING OBJECT AT MOVING VEHICLE', 'DEFRAUDING INNKEEPER/THEFT OF SERVICES, $400 & UNDER', 'CRIMINAL THREATS - NO WEAPON DISPLAYED', 'VANDALISM - FELONY ($400 & OVER, ALL CHURCH VANDALISMS) 0114', 'BATTERY WITH SEXUAL CONTACT', 'OTHER MISCELLANEOUS CRIME', 'CHILD ABUSE (PHYSICAL) - SIMPLE ASSAULT', 'CHILD NEGLECT (SEE 300 W.I.C.)', 'OTHER ASSAULT', 'BOMB SCARE', 'EXTORTION', 'RAPE, FORCIBLE', 'INTIMATE PARTNER - AGGRAVATED ASSAULT', 'CHILD ANNOYING (17YRS & UNDER)', 'SHOTS FIRED AT INHABITED DWELLING', 'BATTERY POLICE (SIMPLE)', 'BRANDISH WEAPON', 'CRUELTY TO ANIMALS', 'SEXUAL PENTRATION WITH A FOREIGN OBJECT', 'PURSE SNATCHING', 'RAPE, ATTEMPTED', 'KIDNAPPING', 'BEASTIALITY, CRIME AGAINST NATURE SEXUAL ASSLT WITH ANIM0065', 'SEX, UNLAWFUL', 'ORAL COPULATION', 'DISCHARGE FIREARMS/SHOTS FIRED', 'CHILD STEALING', 'WEAPONS POSSESSION/BOMBING', 'CHILD ABUSE (PHYSICAL) - AGGRAVATED ASSAULT', 'KIDNAPPING - GRAND ATTEMPT', 'PURSE SNATCHING - ATTEMPT', 'BATTERY ON A FIREFIGHTER', 'DEFRAUDING INNKEEPER/THEFT OF SERVICES, OVER $400', 'INCITING A RIOT', 'LYNCHING - ATTEMPTED', 'REPLICA FIREARMS(SALE,DISPLAY,MANUFACTURE OR DISTRIBUTE)0132', 'CHILD ABANDONMENT', 'SHOTS FIRED AT MOVING VEHICLE, TRAIN OR AIRCRAFT', 'LYNCHING', 'MANSLAUGHTER, NEGLIGENT', 'INCEST (SEXUAL ACTS BETWEEN BLOOD RELATIVES)', 'SEX,UNLAWFUL(INC MUTUAL CONSENT, PENETRATION W/ FRGN OBJ0059', 'SEXUAL PENETRATION W/FOREIGN OBJECT', 'LEWD/LASCIVIOUS ACTS WITH CHILD']
+    for a in x:
+        if a in violent:
+            temp.append('Violent')
+        else:
+            temp.append('Non-Violent')
+    return temp
 
-ds['Distance'] = pd.Series(total)
+def date_to_epoch():
+    temp = []
+    date_format = '%m/%d/%Y %h:%m'
+    x = getData('Date Occurred')
+    y = getData('Time Occurred')
+    for a in range(len(x)):
+        date_of_crime = str(x[a])
+        time_of_crime = str(y[a])
+        print time_of_crime
+        time_of_crime = time_of_crime[:2] + ":" + time_of_crime[2:] if len(time_of_crime) > 3 else "0" + time_of_crime[:1] + ":" + time_of_crime[1:]
+        print time_of_crime,"\n"
+        if len(time_of_crime) < 4:
+            time_of_crime += '00'
+        epoch = int(time.mktime(time.strptime(date_of_crime + " " + time_of_crime, date_format)))#int(time.mktime(time.strptime(date_of_crime + " " + time_of_crime, date_format)))
+        temp.append(epoch)
+        print date_of_crime, time_of_crime, epoch, date_of_crime + " " + time_of_crime
+    return temp
+
+# Change it with the original csv file name
+ds = pd.read_csv('originalData.csv')
+ds2 = ds[["DR Number","Area Name","Location "]]
+ds['Epoch Occurred'] = pd.Series(date_to_epoch())
+ds['distance'] = pd.Series(distance())
+ds['Victim Descent'] = pd.Series(victimDescent())
+ds['Crime Type'] = pd.Series(crimeType())
 ds.to_csv('output.csv', index = True)
-
-import csv
-import io
-import time
-import pandas as pd
-
-from pyspark import SparkConf, SparkContext
-
-# Original File Features (With Corresponding Indices)
-headers = {'Crime Code': 7, 'Status Code': 17, 'Time Occurred': 3, 'Date Occurred': 2, 'Weapon Used Code': 15,
-           'Reporting District': 6, 'Crime Code Description': 8, 'Crime Code 3': 21, 'Victim Age': 10, 'DR Number': 0,
-           'Premise Code': 13, 'Weapon Description': 16, 'Premise Description': 14, 'MO Codes': 9, 'Address': 23,
-           'Crime Code 1': 19, 'Area Name': 5, 'Victim Descent': 12, 'Crime Code 4': 22, 'Location': 25,
-           'Date Reported': 1, 'Victim Sex': 11, 'Cross Street': 24, 'Crime Code 2': 20,
-           'Status Description': 18, 'Area ID': 4}
-
-# Selected Features (To add new feature, must add new dict entry with feature name and index)
-filtered_headers = {"Date Reported": 0, "Date Occurred": 1, "Time Occurred": 2, "Area ID": 3, "Area Name": 4,
-                    "Victim Age": 5, "Victim Sex": 6, "Victim Descent": 7, "Location": 8, "Epoch Occurred": 9}
-
-date_format = '%m/%d/%Y %H:%M'
-
-# IO files
-raw_data_file = "sample.csv"
-processed_data_file = "sample_new1.csv"
-
-
-# Filter by selected features
-def filter_cols(line):
-    input_csv = io.StringIO(line)
-    for row in csv.reader(input_csv):
-        selected_cols = {}
-        for header in filtered_headers.keys():
-            if headers.get(header) is not None:
-                selected_cols[filtered_headers.get(header)] = row[headers.get(header)]
-        return selected_cols
-
-
-# Convert date to epoch
-def date_to_epoch(row):
-    date_of_crime = str(row[filtered_headers.get('Date Occurred')]).strip()
-    time_of_crime = str(row[filtered_headers.get('Time Occurred')]).strip()
-    time_of_crime = time_of_crime[:2] + ":" + time_of_crime[2:] if len(time_of_crime) > 3 else \
-        "0" + time_of_crime[:2] + ":" + time_of_crime[2:]
-    epoch = int(time.mktime(time.strptime(date_of_crime + " " + time_of_crime, date_format)))
-    row[filtered_headers.get('Epoch Occurred')] = epoch
-
-    return row
-
-
-# Convert data rows to CSV form for export
-def transform_for_csv_export(row):
-    num_cols = len(row)
-    line = []
-    for index in range(num_cols):
-        line.append(row.get(index))
-
-    output = io.StringIO("")
-    csv.writer(output).writerow(line)
-    return output.getvalue().strip()
-
-
-# Get names of selected features for CSV export
-def get_filtered_headers():
-    indexed_headers = {y: x for x, y in filtered_headers.items()}
-    header_list = []
-    for index in range(len(indexed_headers)):
-        header_list.append(indexed_headers[index])
-
-    return ",".join(header_list)
-
-
-def main():
-    # Spark Config
-    conf = SparkConf().setAppName("LACrimePreProcessing").setMaster('local')
-    # Init SparkSession
-    sc = SparkContext(conf=conf)
-
-    # Read CSV file
-    rawFileRdd = sc.textFile(raw_data_file)
-
-    # Pre-processing
-    rawFileRdd = rawFileRdd.map(filter_cols).map(date_to_epoch).map(transform_for_csv_export)
-
-    # To export pre-processed data to CSV
-    # processed_data = [get_filtered_headers()]
-    processed_data = []
-    processed_data.extend(rawFileRdd.collect())
-    with open(processed_data_file, 'w') as f:
-        for line in processed_data:
-            f.write(line + '\n')
-
-    # SparkContext Cleanup
-    sc.stop()
-
-
-
-if __name__ == '__main__':
-    main()
