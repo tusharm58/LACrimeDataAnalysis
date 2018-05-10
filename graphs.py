@@ -144,7 +144,7 @@ def initiative(x,y,t,title):
 			elif (  x[a][-4:] == '2013' or x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
 				tempx[temp-1] += 1
 	print ("Permutation Test")
-	# permutation(tempx,tempy)
+	permutation(tempx,tempy)
 	data = [0,0,0,0,0,0,0,0,0]
 	for a in range(len(x)):
 		if type(x[a]) != float and type(y[a]) != float and t in y[a]:
@@ -169,7 +169,7 @@ def proposition47(x,title):
 			elif ( x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
 				tempx[temp-1] += 1
 	print ("Permutation Test")
-	# permutation(tempx,tempy)
+	permutation(tempx,tempy)
 	data = [0,0,0,0,0,0,0,0]
 	for a in range(len(x)):
 		if type(x[a]) != float and int(x[a][-1:]) != 8:
@@ -194,7 +194,7 @@ def juv(x,y,z,d):
 			if x[a] not in fire:
 				tempx[temp-1] += 1
 			tempy[temp-1] += 1
-	# permutation(tempx,tempy)
+	permutation(tempx,tempy)
 
 
 dataset = pd.read_csv('output.csv')
