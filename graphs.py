@@ -1,12 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-import statsmodels.api as sm
-import scipy.stats as stats
-from scipy.stats import norm
-import seaborn as sns
 import math
 from pylab import *
 from decimal import *
@@ -22,8 +16,7 @@ def victimPreprocessing(x):
 
 def pie(slices, labels, explode, title):
 	fig1, ax1 = plt.subplots()
-	ax1.pie(slices, labels=tuple(labels),explode = explode, autopct='%1.1f%%',
-	        shadow=True, startangle=90)
+	ax1.pie(slices, labels=tuple(labels),explode = explode, autopct='%1.1f%%',shadow=True, startangle=90)
 	ax1.axis('equal')
 	plt.title(title)
 	plt.show()
@@ -71,16 +64,14 @@ def premise(z,x,p, title):
 
 # This will give us a pie graph for Crime Vs Victim Descent
 def crimeVsVictimDescent(x):
-	x = victimPreprocessing(x)
 	inverted_dict = getDict(x)
+	print inverted_dict
 	slices=[]
 	labels=[]
 	for a in sorted(inverted_dict.keys()):
 	        slices.append(a)
 	        labels.append(inverted_dict[a])
-	dictionary = {'X': 'Unknown', 'O':'Other', 'B': 'African American', 'W':'Caucasian', 'H':'Hispanic/Latin/Mexican'}
-	for a in range(len(labels)):
-		labels[a] = dictionary[labels[a]]
+	print len(labels), len(slices)
 	explode = (0,0,0,0,0)
 	pie(slices, labels, explode,'Crime Vs Victim Descent')
 	
@@ -153,7 +144,7 @@ def initiative(x,y,t,title):
 			elif (  x[a][-4:] == '2013' or x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
 				tempx[temp-1] += 1
 	print ("Permutation Test")
-	permutation(tempx,tempy)
+	# permutation(tempx,tempy)
 	data = [0,0,0,0,0,0,0,0,0]
 	for a in range(len(x)):
 		if type(x[a]) != float and type(y[a]) != float and t in y[a]:
@@ -162,6 +153,8 @@ def initiative(x,y,t,title):
 	a, = plt.plot([2010,2011,2012,2013,2014,2015,2016,2017,2018], data,label = 'Crime Rate')
 	plots.append(a)
 	plt.legend(handles=plots)
+	plt.ylabel('Number of Crimes')
+	plt.xlabel('Year')
 	plt.title(title)
 	plt.show()
 
@@ -176,7 +169,7 @@ def proposition47(x,title):
 			elif ( x[a][-4:] == '2014' or x[a][-4:] == '2015' or x[a][-4:] == '2016' or x[a][-4:] == '2017' ) :
 				tempx[temp-1] += 1
 	print ("Permutation Test")
-	permutation(tempx,tempy)
+	# permutation(tempx,tempy)
 	data = [0,0,0,0,0,0,0,0]
 	for a in range(len(x)):
 		if type(x[a]) != float and int(x[a][-1:]) != 8:
@@ -186,15 +179,29 @@ def proposition47(x,title):
 	plots.append(a)
 	plt.legend(handles=plots)
 	plt.title(title)
+	plt.ylabel('Number of Crimes')
+	plt.xlabel('Year')
 	plt.show()
 
+def juv(x,y,z,d):
+	fire = ['UNKNOWN WEAPON/OTHER WEAPON', 'REVOLVER', 'HAND GUN', 'UNKNOWN FIREARM', 'SEMI-AUTOMATIC PISTOL',  'AIR PISTOL/REVOLVER/RIFLE/BB GUN','OTHER FIREARM', 'RIFLE', 'SHOTGUN', 'RELIC FIREARM', 'HECKLER & KOCH 93 SEMIAUTOMATIC ASSAULT RIFLE',  'STUN GUN',  'AUTOMATIC WEAPON/SUB-MACHINE GUN',  'UZI SEMIAUTOMATIC ASSAULT RIFLE', 'SAWED OFF RIFLE/SHOTGUN', 'HECKLER & KOCH 91 SEMIAUTOMATIC ASSAULT RIFLE', 'STARTER PISTOL/REVOLVER', 'UNK TYPE SEMIAUTOMATIC ASSAULT RIFLE', 'ASSAULT WEAPON/UZI/AK47/ETC', 'SEMI-AUTOMATIC RIFLE', 'MAC-10 SEMIAUTOMATIC ASSAULT WEAPON', 'ANTIQUE FIREARM', 'MAC-11 SEMIAUTOMATIC ASSAULT WEAPON']
+	violent = ['INTIMATE PARTNER - SIMPLE ASSAULT', 'VANDALISM - MISDEAMEANOR ($399 OR UNDER)', 'CRIMINAL HOMICIDE', 'BATTERY - SIMPLE ASSAULT', 'ROBBERY', 'SODOMY/SEXUAL CONTACT B/W PENIS OF ONE PERS TO ANUS OTH 0007=02', 'ATTEMPTED ROBBERY', 'RESISTING ARREST', 'ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT',  'CRIMINAL THREATS - NO WEAPON DISPLAYED',  'BATTERY WITH SEXUAL CONTACT', 'OTHER MISCELLANEOUS CRIME', 'CHILD ABUSE (PHYSICAL) - SIMPLE ASSAULT', 'CHILD NEGLECT (SEE 300 W.I.C.)', 'OTHER ASSAULT', 'BOMB SCARE', 'EXTORTION', 'RAPE, FORCIBLE', 'INTIMATE PARTNER - AGGRAVATED ASSAULT', 'CHILD ANNOYING (17YRS & UNDER)', 'SHOTS FIRED AT INHABITED DWELLING', 'BATTERY POLICE (SIMPLE)', 'BRANDISH WEAPON', 'CRUELTY TO ANIMALS', 'SEXUAL PENTRATION WITH A FOREIGN OBJECT', 'PURSE SNATCHING', 'RAPE, ATTEMPTED', 'KIDNAPPING', 'BEASTIALITY, CRIME AGAINST NATURE SEXUAL ASSLT WITH ANIM0065', 'SEX, UNLAWFUL', 'ORAL COPULATION', 'DISCHARGE FIREARMS/SHOTS FIRED', 'CHILD STEALING', 'WEAPONS POSSESSION/BOMBING', 'CHILD ABUSE (PHYSICAL) - AGGRAVATED ASSAULT', 'KIDNAPPING - GRAND ATTEMPT', 'PURSE SNATCHING - ATTEMPT', 'BATTERY ON A FIREFIGHTER', 'DEFRAUDING INNKEEPER/THEFT OF SERVICES, OVER $400', 'INCITING A RIOT', 'LYNCHING - ATTEMPTED', 'REPLICA FIREARMS(SALE,DISPLAY,MANUFACTURE OR DISTRIBUTE)0132', 'CHILD ABANDONMENT', 'SHOTS FIRED AT MOVING VEHICLE, TRAIN OR AIRCRAFT', 'LYNCHING', 'MANSLAUGHTER, NEGLIGENT', 'INCEST (SEXUAL ACTS BETWEEN BLOOD RELATIVES)', 'SEX,UNLAWFUL(INC MUTUAL CONSENT, PENETRATION W/ FRGN OBJ0059', 'SEXUAL PENETRATION W/FOREIGN OBJECT', 'LEWD/LASCIVIOUS ACTS WITH CHILD']
+	tempx = [0,0,0,0,0,0,0,0,0,0,0,0]
+	tempy = [0,0,0,0,0,0,0,0,0,0,0,0]
+	for a in range(len(x)):
+		if type(x[a]) != float and type(y[a]) != float and type(z[a]) != float and type(d[a]) != float and y[a] in violent and 'Juv' in z[a]:
+			temp = int(d[a][0:d[a].index('/')])
+			if x[a] not in fire:
+				tempx[temp-1] += 1
+			tempy[temp-1] += 1
+	# permutation(tempx,tempy)
 
 
-
-dataset = pd.read_csv('wo.csv')
+dataset = pd.read_csv('output.csv')
 initiative(getData('Date Occurred'), getData('Status Description'), 'Juv', 'Juvinile Crime Rate Trend')
 initiative(getData('Date Occurred'), getData('Crime Code Description'), 'CHILD' ,'Child Abuse Crime Rate Trend')
 proposition47(getData('Date Occurred'), 'Crime Rate Trend')
+juv(getData('Weapon Description'),getData('Crime Code Description'),getData('Status Description'),getData('Date Occurred'))
 top10(getData('Crime Code Description'))
 premise(getData('Crime Code Description'), getData('Premise Description'), 'STREET', 'Top 10 Crime Type on Street')
 premise(getData('Crime Code Description'), getData('Premise Description'), 'SINGLE FAMILY', 'Top 10 Crime Type on Single Family Dwelling')
